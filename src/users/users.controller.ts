@@ -7,6 +7,7 @@ import {
   Post,
   Delete,
   Query,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UserService } from './users.service';
@@ -27,6 +28,11 @@ export class UserController {
   @Get('/:id')
   async findUser(@Param('id') id: string) {
     const user = await this.userService.findOne(id);
+    if (!user) {
+      if (!user) {
+        throw new NotFoundException();
+      }
+    }
     return { statusCode: 200, body: user };
   }
 
