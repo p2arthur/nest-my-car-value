@@ -6,13 +6,15 @@ import { User } from './users.entity';
 export class UserService {
   constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
-  create(email: string, password: string) {
+  create(email: string, password: string): Promise<User> {
     const user = this.repo.create({ email, password });
     return this.repo.save(user);
   }
 
-  findOne(id: number): Promise<User> {
-    const user = this.repo.findOneBy({ id });
+  findOne(id: string): Promise<User> {
+    const parsedId = parseInt(id);
+
+    const user = this.repo.findOneBy({ id: parsedId });
     return user;
   }
 
@@ -21,7 +23,7 @@ export class UserService {
     return user;
   }
 
-  async update(id: number, attributes: Partial<User>) {
+  async update(id: string, attributes: Partial<User>): Promise<User> {
     const user = await this.findOne(id);
     if (!user) {
       throw new Error('User not found');
@@ -30,7 +32,11 @@ export class UserService {
     return this.repo.save(user);
   }
 
-  async remove(id: number) {
-    return id;
+  async remove(id: string) {
+    const user = await this.findOne(id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return this.repo.remove(user);
   }
 }
