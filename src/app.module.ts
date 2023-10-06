@@ -4,7 +4,7 @@ import { UserModule } from './users/users.module';
 import { ReportModule } from './report/report.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Users } from './users/users.entity';
+import { User } from './users/users.entity';
 import { Report } from './report/report.entity';
 
 @Module({
@@ -12,7 +12,7 @@ import { Report } from './report/report.entity';
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'db.sqlite',
-      entities: [Users, Report],
+      entities: [User, Report],
       synchronize: true,
     }),
     UserModule,

@@ -1,6 +1,9 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UserService } from './users.service';
+import { User } from './users.entity';
+import { UpdateUserDto } from './dtos/update-user.dto';
+import { DeepPartial } from 'typeorm';
 
 @Controller('auth')
 export class UserController {
@@ -24,5 +27,8 @@ export class UserController {
   async findUserByEmail() {}
 
   @Patch(':id')
-  async updateUser(@Param('id') id: number) {}
+  async updateUser(@Param('id') id: number, @Body() body: UpdateUserDto) {
+    const user = await this.userService.update(id, body);
+    return { statusCode: 200, body: JSON.stringify('User updated') };
+  }
 }
