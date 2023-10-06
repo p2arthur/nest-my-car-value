@@ -12,6 +12,9 @@ import {
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UserService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { UseInterceptors } from '@nestjs/common';
+import { SerializerInterceptor } from 'src/interceptors/serialize.interceptor';
+
 @Controller('/auth')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -25,6 +28,7 @@ export class UserController {
     };
   }
 
+  @UseInterceptors(SerializerInterceptor)
   @Get('/:id')
   async findUser(@Param('id') id: string) {
     const user = await this.userService.findOne(id);
