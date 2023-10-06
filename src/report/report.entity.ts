@@ -6,8 +6,8 @@ export class Report {
   id: number;
 
   @Column()
-  mileage: number;
+  price: number;
 
   @Column()
-  price: number;
+  mileage: number;
 }
