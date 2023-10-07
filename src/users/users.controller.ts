@@ -1,60 +1,53 @@
 import {
   Body,
   Controller,
-  Get,
-  Param,
-  Patch,
   Post,
+  Get,
+  Patch,
   Delete,
+  Param,
   Query,
   NotFoundException,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
-import { UserService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { UseInterceptors } from '@nestjs/common';
-import { SerializerInterceptor } from 'src/interceptors/serialize.interceptor';
+import { UserService } from './users.service';
+import { SerializeInterceptor } from '../interceptors/serialize.interceptor';
 
-@Controller('/auth')
+@Controller('auth')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private usersService: UserService) {}
 
   @Post('/signup')
   createUser(@Body() body: CreateUserDto) {
-    const user = this.userService.create(body.email, body.password);
-    return {
-      stautsCode: 201,
-      body: user,
-    };
+    this.usersService.create(body.email, body.password);
   }
 
-  @UseInterceptors(SerializerInterceptor)
+  @UseInterceptors(SerializeInterceptor)
   @Get('/:id')
   async findUser(@Param('id') id: string) {
-    const user = await this.userService.findOne(id);
+    console.log('handler is running');
+    const user = await this.usersService.findOne(id);
     if (!user) {
-      if (!user) {
-        throw new NotFoundException();
-      }
+      throw new NotFoundException('user not found');
     }
-    return { statusCode: 200, body: user };
+    return user;
   }
 
   @Get()
-  async findUserByEmail(@Query('email') email: string) {
-    const user = await this.userService.find(email);
-    return { statusCode: 200, body: user };
-  }
-
-  @Patch('/:id')
-  async updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
-    const user = await this.userService.update(id, body);
-    return { statusCode: 200, body: user };
+  findAllUsers(@Query('email') email: string) {
+    return this.usersService.find(email);
   }
 
   @Delete('/:id')
-  async deleteUser(@Param('id') id: string) {
-    const user = await this.userService.remove(id);
-    return { statusCode: 200, body: user };
+  removeUser(@Param('id') id: string) {
+    return this.usersService.remove(id);
+  }
+
+  @Patch('/:id')
+  updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
+    return this.usersService.update(id, body);
   }
 }
