@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common/decorators';
 import { UserService } from './users.service';
 import { User } from './users.entity';
-import { BadRequestException } from '@nestjs/common';
+import {
+  BadRequestException,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
 
@@ -44,6 +48,29 @@ export class AuthService {
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
-  signin() {}
+  async signin(email: string, password: string) {
+    const [user]: any = await this.usersService.find(email);
+
+    if (!user) {
+      throw new NotFoundException('User with the given email not found');
+    }
+
+    const [salt, storedHash] = user.password.split('.');
+    console.log('salt:', salt);
+    console.log('storedHash:', storedHash);
+
+    const hash = (await scrypt(password, salt, 32)) as Buffer;
+
+    const result = hash.toString('hex');
+
+    console.log('result', result);
+
+    if (result !== storedHash) {
+      console.log('Wrong password');
+      throw new ForbiddenException('Wrong password');
+    }
+    console.log('User logged in');
+    return user;
+  }
   //----------------------------------------------------------------------------
 }

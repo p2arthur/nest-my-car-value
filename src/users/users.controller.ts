@@ -16,6 +16,7 @@ import { UserDto } from './dtos/user.dto';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { User } from './users.entity';
 import { AuthService } from './auth.service';
+import { SigninUserDto } from './dtos/signin-user.dot';
 
 let user: User | User[];
 
@@ -30,6 +31,13 @@ export class UserController {
   @Post('/signup')
   async createUser(@Body() body: CreateUserDto) {
     user = await this.authService.signup(body.email, body.password);
+    return user;
+  }
+
+  @Post('/signin')
+  async signinUser(@Body() body: SigninUserDto) {
+    console.log(body);
+    user = await this.authService.signin(body.email, body.password);
     return user;
   }
 
