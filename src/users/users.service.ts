@@ -12,6 +12,9 @@ export class UserService {
   }
 
   findOne(id: string): Promise<User> {
+    if (!id) {
+      throw new NotFoundException('No user id');
+    }
     const parsedId = parseInt(id);
     const user = this.repo.findOneBy({ id: parsedId });
 

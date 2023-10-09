@@ -8,6 +8,7 @@ import {
   Param,
   Query,
   NotFoundException,
+  Session,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -27,20 +28,43 @@ export class UserController {
     private usersService: UserService,
     private authService: AuthService,
   ) {}
+  //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
   @Post('/signup')
-  async createUser(@Body() body: CreateUserDto) {
+  async createUser(@Body() body: CreateUserDto, @Session() session: any) {
     user = await this.authService.signup(body.email, body.password);
+
+    session.userId = user.id;
     return user;
   }
+  //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
   @Post('/signin')
-  async signinUser(@Body() body: SigninUserDto) {
-    console.log(body);
-    user = await this.authService.signin(body.email, body.password);
+  async signinUser(@Body() body: SigninUserDto, @Session() session: any) {
+    const user = await this.authService.signin(body.email, body.password);
+
+    session.userId = user.id;
     return user;
   }
+  //----------------------------------------------------------------------------
 
+  @Post('/signout')
+  signoutUser(@Session() session: any) {
+    session.userId = null;
+    return session;
+  }
+
+  //----------------------------------------------------------------------------
+  @Get('/session')
+  getUserSession(@Session() session: any) {
+    console.log(session);
+    return this.usersService.findOne(session.userId);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
   @Get('/:id')
   async findUser(@Param('id') id: string) {
     user = await this.usersService.findOne(id);
@@ -49,22 +73,29 @@ export class UserController {
     }
     return user;
   }
+  //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
   @Get()
   async findAllUsers(@Query('email') email: string) {
     user = await this.usersService.find(email);
     return user;
   }
+  //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
   @Delete('/:id')
   async removeUser(@Param('id') id: string) {
     user = await this.usersService.remove(id);
     return user;
   }
+  //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
   @Patch('/:id')
   async updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
     user = await this.usersService.update(id, body);
     return user;
   }
+  //----------------------------------------------------------------------------
 }
