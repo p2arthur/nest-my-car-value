@@ -9,7 +9,7 @@ import {
   Query,
   NotFoundException,
   Session,
-  UseInterceptors,
+  ForbiddenException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -20,13 +20,11 @@ import { User } from './users.entity';
 import { AuthService } from './auth.service';
 import { SigninUserDto } from './dtos/signin-user.dot';
 import { CurrentUser } from './decorators/current-user.decorator';
-import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 
 let user: User | User[];
 
 @Controller('auth')
 @Serialize(UserDto)
-@UseInterceptors(CurrentUserInterceptor)
 export class UserController {
   constructor(
     private usersService: UserService,
@@ -63,6 +61,9 @@ export class UserController {
   //----------------------------------------------------------------------------
   @Get('/session')
   getUserSession(@CurrentUser() currentUser: User) {
+    if (!currentUser) {
+      throw new ForbiddenException('Please login to use this api');
+    }
     return currentUser;
   }
   //----------------------------------------------------------------------------
