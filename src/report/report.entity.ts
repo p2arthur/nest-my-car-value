@@ -13,6 +13,9 @@ export class Report {
   id: number;
 
   @Column()
+  creatorId: number;
+
+  @Column()
   price: number;
 
   @Column()
