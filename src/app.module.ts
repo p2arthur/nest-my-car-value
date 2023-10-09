@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { User } from './users/users.entity';
 import { Report } from './report/report.entity';
+import { AuthService } from './users/auth.service';
 
 @Module({
   imports: [
