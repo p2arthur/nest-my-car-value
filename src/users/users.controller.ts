@@ -21,7 +21,7 @@ import { User } from './users.entity';
 import { AuthService } from './auth.service';
 import { SigninUserDto } from './dtos/signin-user.dot';
 import { CurrentUser } from './decorators/current-user.decorator';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../guards/auth.guard';
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
