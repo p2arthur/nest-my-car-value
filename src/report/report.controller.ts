@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common';
 import { CreateReportDto } from './dtos/create-report.dtos';
 import { ReportService } from './report.service';
-import { CurrentUser } from 'src/users/decorators/current-user.decorator';
-import { User } from 'src/users/users.entity';
-import { Serialize } from 'src/interceptors/serialize.interceptor';
-import { UserDto } from 'src/users/dtos/user.dto';
+import { CurrentUser } from '../users/decorators/current-user.decorator';
+import { User } from '../users/users.entity';
+import { Serialize } from '../interceptors/serialize.interceptor';
+import { UserDto } from '../users/dtos/user.dto';
 
 @Controller('/report')
 @Serialize(UserDto)
