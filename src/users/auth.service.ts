@@ -63,13 +63,9 @@ export class AuthService {
 
     const result = hash.toString('hex');
 
-    console.log('result', result);
-
     if (result !== storedHash) {
-      console.log('Wrong password');
-      throw new ForbiddenException('Wrong password');
+      throw new BadRequestException('Wrong password');
     }
-    console.log('User logged in');
     return user;
   }
   //----------------------------------------------------------------------------
