@@ -70,9 +70,7 @@ describe('AuthService', () => {
 
   //----------------------------------------------------------------------------
   it('throws a BadRequestExceptionError if user signs up with email that is in use', async () => {
-    fakeUserService.find = () => {
-      return Promise.resolve([{ id: 1, email: 'a', password: '1' } as User]);
-    };
+    await service.signup('marcoladesnipe@gmail.com', '*Thisismarcola');
 
     expect(
       service.signup('marcoladesnipe@gmail.com', '*Thisismarcola'),
@@ -90,15 +88,7 @@ describe('AuthService', () => {
 
   //----------------------------------------------------------------------------
   it('user cannot signin using a wrong password', async () => {
-    fakeUserService.find = () => {
-      return Promise.resolve([
-        {
-          email: 'p2arthur@gmail.com',
-          password:
-            '53ecd24850ed7100.99a7a60859e22feb323cb88a5d5b0faad1389b627b35d78ab53b48bedea6eaa3',
-        } as User,
-      ]);
-    };
+    await service.signup('p2arthur@gmail.com', '*Thisisrightpassword');
     await expect(
       service.signin('p2arthur@gmail.com', '*Thisiswrongpassword'),
     ).rejects.toThrow(BadRequestException);
@@ -107,7 +97,7 @@ describe('AuthService', () => {
 
   //----------------------------------------------------------------------------
   it('user can signin using its credentials', async () => {
-    const user = await service.signup('p2arthur@gmail.com', '*Thisp2');
+    await service.signup('p2arthur@gmail.com', '*Thisp2');
 
     expect(service.signin('p2arthur@gmail.com', '*Thisp2')).toBeDefined();
   });
