@@ -10,6 +10,7 @@ import {
   NotFoundException,
   Session,
   ForbiddenException,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -20,9 +21,14 @@ import { User } from './users.entity';
 import { AuthService } from './auth.service';
 import { SigninUserDto } from './dtos/signin-user.dot';
 import { CurrentUser } from './decorators/current-user.decorator';
+import { AuthGuard } from 'src/guards/auth.guard';
+//----------------------------------------------------------------------------
 
+//----------------------------------------------------------------------------
 let user: User | User[];
+//----------------------------------------------------------------------------
 
+//----------------------------------------------------------------------------
 @Controller('auth')
 @Serialize(UserDto)
 export class UserController {
@@ -57,13 +63,12 @@ export class UserController {
     session.userId = null;
     return session;
   }
+  //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   @Get('/session')
+  @UseGuards(AuthGuard)
   getUserSession(@CurrentUser() currentUser: User) {
-    if (!currentUser) {
-      throw new ForbiddenException('Please login to use this api');
-    }
     return currentUser;
   }
   //----------------------------------------------------------------------------
