@@ -22,17 +22,11 @@ export class Report {
   mileage: number;
 
   @AfterUpdate()
-  logUpdate() {
-    console.log('Updated report with id:', this.id);
-  }
+  logUpdate() {}
 
   @AfterInsert()
-  logInsert() {
-    console.log('Inserted report with id:', this.id);
-  }
+  logInsert() {}
 
   @AfterRemove()
-  logRemove() {
-    console.log('Removed report with id:', this.id);
-  }
+  logRemove() {}
 }

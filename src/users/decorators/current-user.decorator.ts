@@ -7,7 +7,6 @@ export const CurrentUser = createParamDecorator(
     const session = request.session;
 
     const loggedUserId = session.userId;
-    console.log(loggedUserId);
     return request.currentUser;
   },
 );

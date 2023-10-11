@@ -24,7 +24,6 @@ export class ReportController {
 
   @Post()
   postReport(@CurrentUser() currentUser: User, @Body() body: CreateReportDto) {
-    console.log(currentUser);
     if (!currentUser) {
       throw new ForbiddenException('Login to post a user');
     }

@@ -1,11 +1,7 @@
 import { Injectable } from '@nestjs/common/decorators';
 import { UserService } from './users.service';
 import { User } from './users.entity';
-import {
-  BadRequestException,
-  NotFoundException,
-  ForbiddenException,
-} from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
 
@@ -56,9 +52,6 @@ export class AuthService {
     }
 
     const [salt, storedHash] = user.password.split('.');
-    console.log('salt:', salt);
-    console.log('storedHash:', storedHash);
-
     const hash = (await scrypt(password, salt, 32)) as Buffer;
 
     const result = hash.toString('hex');
