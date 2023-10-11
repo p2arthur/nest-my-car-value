@@ -13,10 +13,22 @@ export class Report {
   id: number;
 
   @Column()
-  creatorId: number;
+  price: number;
 
   @Column()
-  price: number;
+  make: string;
+
+  @Column()
+  model: string;
+
+  @Column()
+  year: number;
+
+  @Column()
+  latitude: number;
+
+  @Column()
+  longitude: number;
 
   @Column()
   mileage: number;
