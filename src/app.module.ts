@@ -19,6 +19,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
+        console.log(`envFilePath: .env.${process.env.NODE_ENV}`);
+        console.log(config.get<string>('DB_NAME'));
         return {
           type: 'sqlite',
           database: config.get<string>('DB_NAME'),
@@ -27,13 +29,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         };
       },
     }),
-
-    // TypeOrmModule.forRoot({
-    //   type: 'sqlite',
-    //   database: 'db.sqlite',
-    //   entities: [User, Report],
-    //   synchronize: true,
-    // }),
 
     UserModule,
     ReportModule,
