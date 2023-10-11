@@ -18,10 +18,29 @@ describe('Authentication System', () => {
   });
 
   it('Handles a signup request', async () => {
-    return request(app.getHttpServer())
+    return await request(app.getHttpServer())
       .post('/auth/signup')
       .send({ email: testEmail, password: testPassword })
       .expect(201)
+      .then((res) => {
+        const { id, email } = res.body;
+        expect(id).toBeDefined();
+        expect(email).toEqual(testEmail);
+      });
+  });
+
+  it('Handles a signin request made with correct credentials and et the currently logged user session', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/auth/signin')
+      .send({ email: testEmail, password: testPassword })
+      .expect(201);
+
+    const cookie = response.get('Set-Cookie');
+
+    return await request(app.getHttpServer())
+      .get('/auth/session')
+      .set('Cookie', cookie)
+      .expect(200)
       .then((res) => {
         const { id, email } = res.body;
         expect(id).toBeDefined();
