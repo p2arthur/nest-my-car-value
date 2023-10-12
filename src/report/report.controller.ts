@@ -3,6 +3,7 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  Param,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -15,7 +16,6 @@ import { UserDto } from '../users/dtos/user.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('/report')
-@Serialize(UserDto)
 export class ReportController {
   constructor(private reportService: ReportService) {}
 
@@ -26,15 +26,20 @@ export class ReportController {
   @UseGuards(AuthGuard)
   @Post()
   postReport(@CurrentUser() currentUser: User, @Body() body: CreateReportDto) {
-    this.reportService.createReport(
-      currentUser.id,
-      body.price,
-      body.make,
-      body.model,
-      body.year,
-      body.latitude,
-      body.longitude,
-      body.mileage,
-    );
+    this.reportService.createReport({
+      price: body.price,
+      make: body.make,
+      model: body.model,
+      year: body.year,
+      latitude: body.latitude,
+      longitude: body.longitude,
+      mileage: body.mileage,
+    });
+  }
+
+  @Get('/:id')
+  async getReportById(@Param('id') id: number) {
+    const report = await this.reportService.getRepositorie(id);
+    return report;
   }
 }

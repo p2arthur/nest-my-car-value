@@ -1,3 +1,4 @@
+import { User } from 'src/users/users.entity';
 import {
   Column,
   PrimaryGeneratedColumn,
@@ -5,15 +6,13 @@ import {
   AfterUpdate,
   AfterInsert,
   AfterRemove,
+  ManyToOne,
 } from 'typeorm';
 
 @Entity()
 export class Report {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column()
-  creatorId: number;
 
   @Column()
   price: number;
@@ -35,6 +34,9 @@ export class Report {
 
   @Column()
   mileage: number;
+
+  @ManyToOne(() => User, (user) => user.reports)
+  user: User;
 
   @AfterUpdate()
   logUpdate() {}
