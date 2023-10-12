@@ -4,6 +4,7 @@ import {
   ForbiddenException,
   Get,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import { User } from '../users/users.entity';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { ReportDto } from './dtos/report.dto';
+import { ApproveReportDto } from './dtos/approve-report.dto';
 
 @Controller('/report')
 @Serialize(ReportDto)
@@ -28,8 +30,14 @@ export class ReportController {
   }
 
   @Get('/:id')
-  async getReportById(@Param('id') id: number) {
-    const report = await this.reportService.getRepositorie(id);
+  async getReportById(@Param('id') id: string) {
+    const report = await this.reportService.getReport(id);
+    return report;
+  }
+
+  @Patch('/:id')
+  async approveReport(@Param('id') id: string, @Body() body: ApproveReportDto) {
+    const report = await this.reportService.approveReport(id, body.approved);
     return report;
   }
 }

@@ -1,11 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Report } from './report.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateReportDto } from './dtos/create-report.dtos';
 import { User } from 'src/users/users.entity';
-import { Serialize } from 'src/interceptors/serialize.interceptor';
-import { UserDto } from 'src/users/dtos/user.dto';
 
 @Injectable()
 export class ReportService {
@@ -14,14 +12,25 @@ export class ReportService {
   private report: Report;
 
   async createReport(reportDto: CreateReportDto, user: User) {
-    const report = this.repo.create(reportDto);
-    report.user = user;
-    this.report = await this.repo.save(report);
+    const reportInstance = this.repo.create(reportDto);
+    reportInstance.user = user;
+    this.report = await this.repo.save(reportInstance);
     return this.report;
   }
 
-  async getRepositorie(id: number) {
-    this.report = await this.repo.findOneBy({ id });
+  async getReport(id: string) {
+    const parsedId = parseInt(id);
+    const report = await this.repo.findOneBy({ id: parsedId });
+    return report;
+  }
+
+  async approveReport(id: string, approved: boolean) {
+    const reportInstance = await this.getReport(id);
+    if (!reportInstance) {
+      throw new NotFoundException('Report not found');
+    }
+    reportInstance.approved = approved;
+    this.report = await this.repo.save(reportInstance);
     return this.report;
   }
 }

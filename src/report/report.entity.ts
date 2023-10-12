@@ -35,7 +35,10 @@ export class Report {
   @Column()
   mileage: number;
 
-  @ManyToOne(() => User, (user) => user.reports)
+  @Column({ default: false })
+  approved: boolean;
+
+  @ManyToOne(() => User, (user) => user.reports, { eager: true })
   user: User;
 
   @AfterUpdate()
