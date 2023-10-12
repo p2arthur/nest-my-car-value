@@ -7,8 +7,26 @@ import { InjectRepository } from '@nestjs/typeorm';
 export class ReportService {
   constructor(@InjectRepository(Report) private repo: Repository<Report>) {}
 
-  createReport(creatorId: number, price: number, mileage: number) {
-    const report = this.repo.create({ creatorId, price, mileage });
+  createReport(
+    creatorId: number,
+    price: number,
+    make: string,
+    model: string,
+    year: number,
+    latitude: number,
+    longitude: number,
+    mileage: number,
+  ) {
+    const report = this.repo.create({
+      creatorId,
+      price,
+      make,
+      model,
+      year,
+      latitude,
+      longitude,
+      mileage,
+    });
     this.repo.save(report);
   }
 }
