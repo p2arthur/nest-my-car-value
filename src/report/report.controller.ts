@@ -12,29 +12,19 @@ import { ReportService } from './report.service';
 import { CurrentUser } from '../users/decorators/current-user.decorator';
 import { User } from '../users/users.entity';
 import { Serialize } from '../interceptors/serialize.interceptor';
-import { UserDto } from '../users/dtos/user.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { ReportDto } from './dtos/report.dto';
 
 @Controller('/report')
+@Serialize(ReportDto)
 export class ReportController {
   constructor(private reportService: ReportService) {}
 
-  @Get('/session')
-  getSession(@CurrentUser() currentUser: User) {
-    return currentUser;
-  }
   @UseGuards(AuthGuard)
   @Post()
   postReport(@CurrentUser() currentUser: User, @Body() body: CreateReportDto) {
-    this.reportService.createReport({
-      price: body.price,
-      make: body.make,
-      model: body.model,
-      year: body.year,
-      latitude: body.latitude,
-      longitude: body.longitude,
-      mileage: body.mileage,
-    });
+    const report = this.reportService.createReport(body, currentUser);
+    return report;
   }
 
   @Get('/:id')

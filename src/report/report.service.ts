@@ -3,18 +3,25 @@ import { Repository } from 'typeorm';
 import { Report } from './report.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateReportDto } from './dtos/create-report.dtos';
+import { User } from 'src/users/users.entity';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { UserDto } from 'src/users/dtos/user.dto';
 
 @Injectable()
 export class ReportService {
   constructor(@InjectRepository(Report) private repo: Repository<Report>) {}
 
-  createReport(reportDto: CreateReportDto) {
+  private report: Report;
+
+  async createReport(reportDto: CreateReportDto, user: User) {
     const report = this.repo.create(reportDto);
-    this.repo.save(report);
+    report.user = user;
+    this.report = await this.repo.save(report);
+    return this.report;
   }
 
   async getRepositorie(id: number) {
-    const report = this.repo.findOneBy({ id });
-    return report;
+    this.report = await this.repo.findOneBy({ id });
+    return this.report;
   }
 }
