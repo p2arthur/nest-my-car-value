@@ -16,14 +16,15 @@ import { Serialize } from '../interceptors/serialize.interceptor';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { ReportDto } from './dtos/report.dto';
 import { ApproveReportDto } from './dtos/approve-report.dto';
+import { AdminGuard } from 'src/guards/admin.guard';
 
 @Controller('/report')
 @Serialize(ReportDto)
 export class ReportController {
   constructor(private reportService: ReportService) {}
 
-  @UseGuards(AuthGuard)
   @Post()
+  @UseGuards(AuthGuard)
   postReport(@CurrentUser() currentUser: User, @Body() body: CreateReportDto) {
     const report = this.reportService.createReport(body, currentUser);
     return report;
@@ -36,6 +37,7 @@ export class ReportController {
   }
 
   @Patch('/:id')
+  @UseGuards(AdminGuard)
   async approveReport(@Param('id') id: string, @Body() body: ApproveReportDto) {
     const report = await this.reportService.approveReport(id, body.approved);
     return report;

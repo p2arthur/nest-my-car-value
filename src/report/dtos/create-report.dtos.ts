@@ -6,7 +6,6 @@ import {
   IsLongitude,
   IsLatitude,
   IsNumber,
-  IsOptional,
 } from 'class-validator';
 
 export class CreateReportDto {
