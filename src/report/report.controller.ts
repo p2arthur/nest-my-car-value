@@ -1,12 +1,12 @@
 import {
   Body,
   Controller,
-  ForbiddenException,
   Get,
   Param,
   Patch,
   Post,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { CreateReportDto } from './dtos/create-report.dtos';
 import { ReportService } from './report.service';
@@ -17,22 +17,23 @@ import { AuthGuard } from 'src/guards/auth.guard';
 import { ReportDto } from './dtos/report.dto';
 import { ApproveReportDto } from './dtos/approve-report.dto';
 import { AdminGuard } from 'src/guards/admin.guard';
+import { GetEstimateDto } from './dtos/get-estimate.dto';
 
 @Controller('/report')
 @Serialize(ReportDto)
 export class ReportController {
   constructor(private reportService: ReportService) {}
 
+  @Get()
+  getEstimate(@Query() query: GetEstimateDto) {
+    console.log(query);
+    return query.make;
+  }
+
   @Post()
   @UseGuards(AuthGuard)
   postReport(@CurrentUser() currentUser: User, @Body() body: CreateReportDto) {
     const report = this.reportService.createReport(body, currentUser);
-    return report;
-  }
-
-  @Get('/:id')
-  async getReportById(@Param('id') id: string) {
-    const report = await this.reportService.getReport(id);
     return report;
   }
 
