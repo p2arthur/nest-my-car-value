@@ -1,3 +1,5 @@
+//This interceptor is depprecated cause we need to apply the currentUser propertie to the request before any @Guards run, for that we changed this interceptor to a middleware
+
 import {
   Injectable,
   NestInterceptor,

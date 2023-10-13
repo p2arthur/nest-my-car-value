@@ -8,6 +8,7 @@ import { AppController } from './app.controller';
 import { APP_PIPE } from '@nestjs/core';
 const cookieSession = require('cookie-session');
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CurrentUserMiddleware } from './users/middlewares/current-user.middleware';
 
 @Module({
   imports: [
