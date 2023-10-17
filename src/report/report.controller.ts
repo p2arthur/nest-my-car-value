@@ -20,7 +20,6 @@ import { AdminGuard } from 'src/guards/admin.guard';
 import { GetEstimateDto } from './dtos/get-estimate.dto';
 
 @Controller('/report')
-@Serialize(ReportDto)
 export class ReportController {
   constructor(private reportService: ReportService) {}
 
@@ -31,6 +30,7 @@ export class ReportController {
 
   @Post()
   @UseGuards(AuthGuard)
+  @Serialize(ReportDto)
   async postReport(
     @CurrentUser() currentUser: User,
     @Body() body: CreateReportDto,

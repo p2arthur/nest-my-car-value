@@ -20,7 +20,7 @@ export class AuthService {
 
     //See if email is already in use
     if (userExists) {
-      throw new BadRequestException('Email in use');
+      throw new BadRequestException('Emaill in use');
     }
 
     //Salt and Hash the user password

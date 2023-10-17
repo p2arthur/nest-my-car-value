@@ -51,6 +51,7 @@ export class UserController {
   //----------------------------------------------------------------------------
   @Post('/signin')
   async signinUser(@Body() body: SigninUserDto, @Session() session: any) {
+    console.log('signin in');
     const user = await this.authService.signin(body.email, body.password);
 
     session.userId = user.id;
