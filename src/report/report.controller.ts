@@ -26,14 +26,17 @@ export class ReportController {
 
   @Get()
   getEstimate(@Query() query: GetEstimateDto) {
-    console.log(query);
-    return query.make;
+    return this.reportService.createEstimate(query);
   }
 
   @Post()
   @UseGuards(AuthGuard)
-  postReport(@CurrentUser() currentUser: User, @Body() body: CreateReportDto) {
-    const report = this.reportService.createReport(body, currentUser);
+  async postReport(
+    @CurrentUser() currentUser: User,
+    @Body() body: CreateReportDto,
+  ) {
+    const report = await this.reportService.createReport(body, currentUser);
+    console.log('reportsss', report);
     return report;
   }
 
